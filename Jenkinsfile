@@ -5,7 +5,7 @@ stage('Descargar Fuentes') {
 checkout scm
 }
 stage('Compilando con maven')
-{	//Configuration / Global Tool COnfiguration / MAVEN jenkinsmvn ==> MAVEN_HOME = D:\Tools\apache-maven-3.6.0
+{	
 def mvnHome = tool 'jenkinsmvn';
 sh "${mvnHome}/bin/mvn clean package"
 }
@@ -20,7 +20,7 @@ sh "docker build -t projectbackend ."
 }
 stage('Iniciando Docker ') {
 script{
-sh "docker run -d --name container-projectbackend -p 80:80 projectbackend:latest"
+sh "docker run -d --name container-projectbackend -p 8085:8080 projectbackend:latest"
 }
 }
 }

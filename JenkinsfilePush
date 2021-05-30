@@ -12,9 +12,13 @@ sh "${mvnHome}/bin/mvn clean package"
 stage('Construyendo Imagen ') {
 
 script {
-             docker.withRegistry( "https://${env.REGISTRY_URL}", 'credentialDockerRegistry') {
-                sh "docker ps"
-         }
+
+      docker.build("${env.REGISTRY_URL}/${env.REGISTRY_NAME}:v1dasvf")
+      sh "docker tag ${env.REGISTRY_URL}/${env.REGISTRY_NAME}:v1dasvf ${env.REGISTRY_URL}/${env.REGISTRY_NAME}:v1dasvf"
+      docker.withRegistry( "https://${env.REGISTRY_URL}", 'credentialDockerRegistry') {
+           sh "docker ps"
+      }
+      
 }
                     
 }

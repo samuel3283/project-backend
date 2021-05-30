@@ -8,6 +8,17 @@ stage('Datos')
 {	
 sh "echo Verificando"
 echo "Verificando...... "
+
+env.SHORT_COMMIT = env.GIT_COMMIT.substring(0,8)
+env.GIT_REPO_URL = env.GIT_URL_1 ?: env.GIT_URL 
+env.GIT_REPO_NAME = env.GIT_REPO_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+env.BRANCH_NAME = env.BRANCH_NAME.replaceAll('\\/','_')
+
+echo "COMMIT::: env.SHORT_COMMIT "
+echo "GIT_REPO_URL::: env.GIT_REPO_URL "
+echo "GIT_REPO_NAME::: env.GIT_REPO_NAME "
+echo "BRANCH_NAME::: env.BRANCH_NAME "
+
 }
 
 

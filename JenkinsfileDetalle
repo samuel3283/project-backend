@@ -1,0 +1,15 @@
+#!groovy?
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+}
+stage('Datos')
+{	
+sh "echo Verificando"
+echo "Verificando...... "
+}
+
+
+
+}

@@ -1,20 +1,23 @@
 #!groovy?
+def scmGit = ""
 node {
 deleteDir()
 stage('Descargar Fuentes') {
-checkout scm
+  scmGit = checkout scm
 }
 stage('Datos')
 {	
 sh "echo Verificando"
 echo "Verificando...... "
 
-env.SHORT_COMMIT = env.GIT_COMMIT.substring(0,8)
-env.GIT_REPO_URL = env.GIT_URL_1 ?: env.GIT_URL 
-env.GIT_REPO_NAME = env.GIT_REPO_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
-env.BRANCH_NAME = env.BRANCH_NAME.replaceAll('\\/','_')
 
-echo "COMMIT::: env.SHORT_COMMIT "
+echo "GIT_COMMIT::: scmGit.SHORT_COMMIT "
+env.SHORT_COMMIT = scmGit.GIT_COMMIT.substring(0,8)
+env.GIT_REPO_URL = scmGit.GIT_URL 
+env.GIT_REPO_NAME = scmGit.GIT_REPO_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+env.BRANCH_NAME = scmGit.BRANCH_NAME.replaceAll('\\/','_')
+
+echo "SHORT_COMMIT::: env.SHORT_COMMIT "
 echo "GIT_REPO_URL::: env.GIT_REPO_URL "
 echo "GIT_REPO_NAME::: env.GIT_REPO_NAME "
 echo "BRANCH_NAME::: env.BRANCH_NAME "

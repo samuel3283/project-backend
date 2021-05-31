@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: repository-ws-backend
+  namespace: #{NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: repository-app-ws-backend
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: repository-app-ws-backend
+        tier: backend
+    spec:
+      containers:
+        - name: repository-ws-backend
+          image: fpsregistry.azurecr.io/fps-app-ws-coberturaautomaticaikf:#{TAG}
+          env:
+            - name: PROFILE
+              value: #{PROFILE}
+          resources:
+            limits:
+              memory: "512Mi"
+      imagePullSecrets:
+        - name: secretregistry
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: repository-ws-backend
+  namespace: #{NAMESPACE}
+spec:
+  selector:
+    app: repository-app-ws-backend
+    tier: backend
+  ports:
+    - name: http
+      protocol: "TCP"
+      port: 8085
+      targetPort: 8085
+  type: Cluster

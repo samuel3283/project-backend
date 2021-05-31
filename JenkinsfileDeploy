@@ -60,8 +60,8 @@ stage('Construyendo Imagen ') {
 script {
 
       sh "chmod -R 777 $WORKSPACE "
-      sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yml "
-      sh "cat $WORKSPACE/services.yml "
+      sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+      sh "cat $WORKSPACE/services.yaml"
       
 }
                     

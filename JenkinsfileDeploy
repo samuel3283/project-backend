@@ -57,20 +57,22 @@ stage('Compilando con maven')
 def mvnHome = tool 'jenkinsmvn';
 sh "${mvnHome}/bin/mvn clean package"
 }
-stage('Despliegue') {
+stage('Prepare Despliegue') {
 
 script {
-
       sh "chmod -R 777 $WORKSPACE "
       sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
       sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
-      sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"
-      
+      sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
 }
                   
-
 }
 
-
+ stage('Despliegue') {
+    withKubeConfig([caCertificate: ${env.CERTIFICATE_CLUSTER_URL}, serverUrl: ${env.SERVER_CLUSTER_URL}]) {
+      sh 'kubectl apply -f $WORKSPACE/services.yaml'
+    }
+  }
+  
 
 }

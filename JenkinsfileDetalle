@@ -1,5 +1,6 @@
 #!groovy?
 def GIT_COMMIT = ""
+def GIT_COMMIT_SHORT = ""
 def GIT_BRANCH = ""
 def GIT_URL = ""
 def GIT_REPOSITORY = ""
@@ -21,7 +22,7 @@ script {
         script: 'git rev-parse HEAD',
         returnStdout: true
     ).trim()
-    GIT_COMMIT = GIT_COMMIT.substring(0,8)
+    GIT_COMMIT_SHORT = GIT_COMMIT.substring(0,8)
 
     GIT_BRANCH = sh (
         script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
@@ -35,17 +36,17 @@ script {
     GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
 
     GIT_USER = sh (
-        script: "git show --format=\"%aN\" ${this.currentGitCommit} | head -n 1",
+        script: "git show --format=\"%aN\" ${GIT_COMMIT} | head -n 1",
         returnStdout: true
     ).trim()
     GIT_EMAIL = sh (
-        script: "git show --format=\"%aE\" ${this.currentGitCommit} | head -n 1",
+        script: "git show --format=\"%aE\" ${GIT_COMMIT} | head -n 1",
         returnStdout: true
     ).trim()
 
     echo "Git url: ${GIT_URL}"
     echo "Git repository: ${GIT_REPOSITORY}"
-    echo "Git commit: ${GIT_COMMIT}"
+    echo "Git commit: ${GIT_COMMIT_SHORT}"
     echo "Git branch: ${GIT_BRANCH}"
     echo "Git user: ${GIT_USER}"
     echo "Git email: ${GIT_EMAIL}"

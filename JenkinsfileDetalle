@@ -10,9 +10,13 @@ stage('Datos')
 sh "echo Verificando"
 
 
-sh ccommit="$(Build.SourceVersion)"
-sh echo "##vso[task.setvariable variable=tag]${ccommit:0:8}"
-
+script {
+   GIT_COMMIT = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    echo "Git commit: ${GIT_COMMIT}"
+}
 
 
 

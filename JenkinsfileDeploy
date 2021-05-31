@@ -6,6 +6,8 @@ def GIT_URL = ""
 def GIT_REPOSITORY = ""
 def GIT_USER = ""
 def GIT_EMAIL = ""
+def PROFILE = "dev"
+def NAMESPACE = "kube-public"
 
 node {
 deleteDir()
@@ -60,7 +62,9 @@ stage('Construyendo Imagen ') {
 script {
 
       sh "chmod -R 777 $WORKSPACE "
-      sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+      sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+      sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
+      sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"
       sh "cat $WORKSPACE/services.yaml"
       
 }

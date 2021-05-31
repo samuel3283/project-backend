@@ -57,7 +57,7 @@ stage('Compilando con maven')
 def mvnHome = tool 'jenkinsmvn';
 sh "${mvnHome}/bin/mvn clean package"
 }
-stage('Construyendo Imagen ') {
+stage('Despliegue') {
 
 script {
 
@@ -65,10 +65,10 @@ script {
       sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
       sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
       sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"
-      sh "cat $WORKSPACE/services.yaml"
       
 }
-                    
+                  
+
 }
 
 

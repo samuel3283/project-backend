@@ -37,7 +37,7 @@ script {
     ).trim()
 
     GIT_REPO = sh (
-        script: "echo ${GIT_URL}.replaceFirst(/^.*\/([^\/]+?).git$/, '') ",
+        script: "echo '${GIT_URL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
         returnStdout: true
     ).trim()
 

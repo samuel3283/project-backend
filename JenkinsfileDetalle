@@ -9,8 +9,11 @@ stage('Datos')
 {	
 sh "echo Verificando"
 
-sh "archivos=$(git rev-parse HEAD)"
-sh "echo Hay $archivos archivos"
+
+sh ccommit="$(Build.SourceVersion)"
+sh echo "##vso[task.setvariable variable=tag]${ccommit:0:8}"
+
+
 
 
 }

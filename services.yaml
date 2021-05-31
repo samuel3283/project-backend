@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: repository-ws-backend
-  namespace: #{NAMESPACE}
+  namespace: kube-public
 spec:
   replicas: 1
   selector:
@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
         - name: repository-ws-backend
-          image: fpsregistry.azurecr.io/fps-app-ws-coberturaautomaticaikf:#{TAG}
+          image: https://index.docker.io/v1/consoleadm2020/repository-tools-public:project-backend_f26f7a32
           env:
             - name: PROFILE
-              value: #{PROFILE}
+              value: dev
           resources:
             limits:
               memory: "512Mi"
@@ -32,7 +32,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: repository-ws-backend
-  namespace: #{NAMESPACE}
+  namespace: kube-public
 spec:
   selector:
     app: repository-app-ws-backend

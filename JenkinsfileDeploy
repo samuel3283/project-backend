@@ -59,8 +59,8 @@ stage('Construyendo Imagen ') {
 
 script {
 
-      sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' service.yml "
-      sh "cat service.yml "
+      sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/service.yml "
+      sh "cat $WORKSPACE/service.yml "
       
 }
                     

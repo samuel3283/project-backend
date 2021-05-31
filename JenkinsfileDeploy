@@ -64,7 +64,13 @@ script {
 }
 
  stage('Despliegue') {
-    kubernetesDeploy(kubeconfigId: 'credential-kubeconfig-aws', configs: 'services.yaml', enableConfigSubstitution: true)
+
+  kubernetesDeploy(
+    configs: 'services.yaml',
+    kubeconfigId: 'credential-kubeconfig-aws',
+    enableConfigSubstitution: true
+   )           
+                    
   }
   
 

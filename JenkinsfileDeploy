@@ -69,9 +69,7 @@ script {
 }
 
  stage('Despliegue') {
-    withKubeConfig([caCertificate: ${env.CERTIFICATE_CLUSTER_URL}, serverUrl: ${env.SERVER_CLUSTER_URL}]) {
-      sh 'kubectl apply -f $WORKSPACE/services.yaml'
-    }
+    kubernetesDeploy(kubeconfigId: credential-kubeconfig-aws, configs: $WORKSPACE/services.yaml, enableConfigSubstitution: true)
   }
   
 

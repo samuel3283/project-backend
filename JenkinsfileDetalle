@@ -36,8 +36,10 @@ script {
         returnStdout: true
     ).trim()
 
+    GIT_REPO = ${GIT_URL}.replaceFirst(/^.*\/([^\/]+?).git$/, '')
 
     echo "Git url: ${GIT_URL}"
+    echo "Git repo: ${GIT_REPO}"
     echo "Git repository: ${GIT_REPOSITORY}"
     echo "Git commit: ${GIT_COMMIT}"
     echo "Git branch: ${GIT_BRANCH}"

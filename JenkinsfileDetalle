@@ -9,7 +9,7 @@ stage('Datos')
 {	
 sh "echo Verificando"
 
-sh "archivos=$("git rev-parse HEAD")"
+sh "archivos=$(git rev-parse HEAD)"
 sh "echo Hay $archivos archivos"
 
 

@@ -1,6 +1,7 @@
 #!groovy?
 def GIT_COMMIT = ""
 def GIT_BRANCH = ""
+def GIT_URL = ""
 def GIT_REPOSITORY = ""
 
 node {
@@ -25,12 +26,18 @@ script {
         returnStdout: true
     ).trim()
 
+    GIT_URL = sh (
+        script: 'git config --get remote.origin.url',
+        returnStdout: true
+    ).trim()
+
     GIT_REPOSITORY = sh (
-        script: "echo '${this.currentGitURL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
+        script: "echo '${GIT_URL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
         returnStdout: true
     ).trim()
 
 
+    echo "Git url: ${GIT_URL}"
     echo "Git repository: ${GIT_REPOSITORY}"
     echo "Git commit: ${GIT_COMMIT}"
     echo "Git branch: ${GIT_BRANCH}"

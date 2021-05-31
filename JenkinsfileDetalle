@@ -1,5 +1,8 @@
 #!groovy?
-def scmGit = ""
+def GIT_COMMIT = ""
+def GIT_BRANCH = ""
+def GIT_REPOSITORY = ""
+
 node {
 deleteDir()
 stage('Descargar Fuentes') {
@@ -15,7 +18,23 @@ script {
         script: 'git rev-parse HEAD',
         returnStdout: true
     ).trim()
+    GIT_COMMIT = GIT_COMMIT.substring(0,8)
+
+    GIT_BRANCH = sh (
+        script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
+        returnStdout: true
+    ).trim()
+
+    GIT_REPOSITORY = sh (
+        script: "echo '${this.currentGitURL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
+        returnStdout: true
+    ).trim()
+
+
+    echo "Git repository: ${GIT_REPOSITORY}"
     echo "Git commit: ${GIT_COMMIT}"
+    echo "Git branch: ${GIT_BRANCH}"
+
 }
 
 

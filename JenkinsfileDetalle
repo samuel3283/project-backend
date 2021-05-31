@@ -36,7 +36,11 @@ script {
         returnStdout: true
     ).trim()
 
-    GIT_REPO = ${GIT_URL}.replaceFirst(/^.*\/([^\/]+?).git$/, '')
+    GIT_REPO = sh (
+        script: "echo ${GIT_URL}.}.replaceFirst(/^.*\/([^\/]+?).git$/, '') ",
+        returnStdout: true
+    ).trim()
+
 
     echo "Git url: ${GIT_URL}"
     echo "Git repo: ${GIT_REPO}"

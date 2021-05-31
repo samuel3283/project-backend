@@ -10,8 +10,9 @@ stage('Datos')
 sh "echo Verificando"
 
 sh "git rev-parse HEAD"
-env.COMMIT_ID = $("git rev-parse HEAD")
-echo "Verificando...${env.COMMIT_ID}"
+COMMIT_ID = $("git rev-parse HEAD")
+echo "Verificando..."
+echo $COMMIT_ID
 
 
 }

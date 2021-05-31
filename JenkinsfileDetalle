@@ -31,11 +31,8 @@ script {
         returnStdout: true
     ).trim()
 
-    GIT_REPOSITORY = sh (
-        script: "echo '${GIT_URL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
-        returnStdout: true
-    ).trim()
-
+    GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+    
     GIT_REPO = sh (
         script: "echo '${GIT_URL}' | cut -d '/' -f6 | sed 's/\\.git//g' ",
         returnStdout: true

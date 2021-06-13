@@ -58,7 +58,7 @@ script {
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 
         def comando2 = "sudo echo '[default]' > /root/.aws/credentials && sudo echo 'aws_access_key_id = AKIA4KR423U5BDWGJW4G' >> /root/.aws/credentials && sudo echo 'aws_secret_access_key = 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' >> /root/.aws/credentials && aws -version"
-        def comando = "ls -l && aws -version"
+        def comando = "aws configure set aws_access_key_id AKIA4KR423U5BDWGJW4G && aws configure set aws_secret_access_key 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 && aws configure set default.region us-east-1"
         sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c ${comando}"
 
           

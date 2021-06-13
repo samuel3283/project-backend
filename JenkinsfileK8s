@@ -60,9 +60,11 @@ stage('Construyendo Imagen ') {
 script {
 
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
-          sh "docker run -i --name kubectl ${env.REGISTRY_NAME}:awscli-kubectl_1.0"
-          sh "aws --version"
-          sh "kubectl --version"
+
+        def comando = "echo '[default]' > /root/.aws/credentials && echo 'aws_access_key_id = AKIA4KR423U5BDWGJW4G' >> /root/.aws/credentials && echo 'aws_secret_access_key = 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' >> /root/.aws/credentials && aws -version"
+        docker run -rm  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 bash -c ${comando}  
+
+          
       }
       
 }

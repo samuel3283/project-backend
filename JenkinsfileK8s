@@ -50,18 +50,14 @@ script {
 
 }
 
-stage('Compilando con maven')
-{	
-def mvnHome = tool 'jenkinsmvn';
-sh "${mvnHome}/bin/mvn clean package"
-}
-stage('Construyendo Imagen ') {
+
+stage('Desplegando Imagen ') {
 
 script {
 
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 
-        def comando = "echo '[default]' > /root/.aws/credentials && echo 'aws_access_key_id = AKIA4KR423U5BDWGJW4G' >> /root/.aws/credentials && echo 'aws_secret_access_key = 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' >> /root/.aws/credentials && aws -version"
+        def comando = "sudo echo '[default]' > /root/.aws/credentials && sudo echo 'aws_access_key_id = AKIA4KR423U5BDWGJW4G' >> /root/.aws/credentials && sudo echo 'aws_secret_access_key = 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' >> /root/.aws/credentials && aws -version"
         sh "docker run -rm  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 bash -c ${comando}"
 
           

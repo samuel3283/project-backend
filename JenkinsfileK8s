@@ -55,16 +55,14 @@ script {
 
 stage('Desplegando Imagen ') {
 
-environment {
-        MY_SECRET_AWS_ACCESS_KEY = credentials('SECRET_AWS_ACCESS_KEY')
-        MY_SECRET_AWS_SECRET_KEY = credentials('SECRET_AWS_SECRET_KEY')
-}
 script {
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 
-        def comando = "aws configure set aws_access_key_id ${MY_SECRET_AWS_ACCESS_KEY} && aws configure set aws_secret_access_key ${MY_SECRET_AWS_SECRET_KEY} && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && kubectl get namespaces"
-        sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c \"${comando}\""
+        withCredentials([usernamePassword(credentialsId: 'AWSKEY', usernameVariable: 'MY_SECRET_AWS_ACCESS_KEY', passwordVariable: 'MY_SECRET_AWS_SECRET_KEY')]) {
+            def comando = "aws configure set aws_access_key_id ${MY_SECRET_AWS_ACCESS_KEY} && aws configure set aws_secret_access_key ${MY_SECRET_AWS_SECRET_KEY} && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && kubectl get namespaces"
+            sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c \"${comando}\""
 
+        }
           
       }
       

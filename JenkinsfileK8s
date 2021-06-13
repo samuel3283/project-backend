@@ -60,7 +60,7 @@ stage('Construyendo Imagen ') {
 script {
 
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
-          sh "docker run -it --name kubectl ${env.REGISTRY_NAME}:awscli-kubectl_1.0"
+          sh "docker run -i --name kubectl ${env.REGISTRY_NAME}:awscli-kubectl_1.0"
           sh "aws --version"
           sh "kubectl --version"
       }

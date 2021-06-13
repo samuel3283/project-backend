@@ -71,7 +71,9 @@ script {
             sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
             sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
       
-            def comando = "aws configure set aws_access_key_id $ACCESS && aws configure set aws_secret_access_key $SECRET && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && kubectl apply -f services.yaml"
+            GIT_EMAIL = $(cat $WORKSPACE/services.yaml)
+            sh "echo == ${GIT_EMAIL} "
+            def comando = "aws configure set aws_access_key_id $ACCESS && aws configure set aws_secret_access_key $SECRET && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && echo '${GIT_EMAIL}' > /home/services.yaml && kubectl apply -f /home/services.yaml"
             sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c \"${comando}\""
 
         }

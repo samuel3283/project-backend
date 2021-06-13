@@ -52,7 +52,7 @@ script {
    
     NAMESPACE = "kube-public"
     PROFILE = "dev"
-  
+    
 }
 
 }
@@ -64,7 +64,8 @@ script {
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 
         withCredentials([usernamePassword(credentialsId: 'AWS_KEY', passwordVariable: 'SECRET', usernameVariable: 'ACCESS')]) {
-        
+            
+            GIT_COMMIT_SHORT = 'project-backend_4b546fcd'    
             sh "chmod -R 777 $WORKSPACE "
             sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
             sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"

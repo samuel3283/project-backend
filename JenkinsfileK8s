@@ -59,10 +59,11 @@ stage('Construyendo Imagen ') {
 
 script {
 
-      docker.build("${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}")
-      sh "docker tag ${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT} ${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}"
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
-          sh "docker push ${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}"
+          sh "docker run -it --name kubectl ${env.REGISTRY_NAME}:awscli-kubectl_1.0"
+          sh "aws --version"
+          sh "kubectl --version"
+          #sh "docker push ${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}"
       }
       
 }

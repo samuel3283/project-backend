@@ -57,10 +57,10 @@ stage('Desplegando Imagen ') {
 
 script {
       withCredentials([string(credentialsId: 'SECRET_AWS_ACCESS_KEY', variable: 'ACCESS_KEY')]) {
-          MY_SECRET_AWS_ACCESS_KEY = ${ACCESS_KEY}
+          MY_SECRET_AWS_ACCESS_KEY = $ACCESS_KEY
       }
       withCredentials([string(credentialsId: 'SECRET_AWS_SECRET_KEY', variable: 'SECRET_KEY')]) {
-          MY_SECRET_AWS_SECRET_KEY = ${SECRET_KEY}
+          MY_SECRET_AWS_SECRET_KEY = $SECRET_KEY
       }
       withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 

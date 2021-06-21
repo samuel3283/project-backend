@@ -59,7 +59,6 @@ stage('Construyendo Imagen ') {
 
 script {
       env.REGISTRY_NAME = ${GIT_REPOSITORY}  
-      #docker.build("${env.REGISTRY_NAME}:${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}")
       docker.build("${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}")
       sh "docker tag ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT} ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}"
       withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            

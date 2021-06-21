@@ -61,7 +61,8 @@ script {
 stage('Desplegando Imagen ') {
 
 script {
-      withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
+      withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            
+      #withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
 
         withCredentials([
             [$class: "StringBinding", credentialsId: "azureAksUser", variable: "AZ_AKS_USER" ],
@@ -74,8 +75,6 @@ script {
 
 
 
-
-    
             GIT_COMMIT_SHORT = '4b546fcd'    
             sh "chmod -R 777 $WORKSPACE "
             sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
@@ -86,9 +85,10 @@ script {
                 script: "cat  $WORKSPACE/services.yaml",
                 returnStdout: true
             ).trim()
-
+            
+            ECR_REGISTRY_NAME = "azurecli-kubectl"
             def comando = "az login --output table --username $AZ_AKS_USER --password $AZ_AKS_PASSWORD --tenant $AZ_AKS_TENANT_ID && az account set --subscription ${AZ_AKS_SUSCRIPTION} && az aks get-credentials --resource-group ${AZ_AKS_RESOURCE_GROUP} --name ${AZ_AKS_K8S_NAME} && echo '${FILE_DEPLOYMENT}' > /home/services.yaml && kubectl apply -f /home/services.yaml"
-            sh "docker run --network=host  ${env.REGISTRY_NAME}:azurecli-kubectl-1.0 sh -c \"${comando}\""
+            sh "docker run --network=host  ${env.REGISTRY_NAME}:1.0 sh -c \"${comando}\""
 
         }
           

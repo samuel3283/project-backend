@@ -62,8 +62,7 @@ stage('Desplegando Imagen ') {
 
 script {
       withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            
-      #withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
-
+      
         withCredentials([
             [$class: "StringBinding", credentialsId: "azureAksUser", variable: "AZ_AKS_USER" ],
             [$class: "StringBinding", credentialsId: "azureAksPassword", variable: "AZ_AKS_PASSWORD" ],
@@ -75,7 +74,6 @@ script {
 
 
 
-            #GIT_COMMIT_SHORT = '4b546fcd'    
             sh "chmod -R 777 $WORKSPACE "
             sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
             sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"

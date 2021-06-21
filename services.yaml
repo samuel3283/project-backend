@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: repository-tools-private
-          image: consoleadm2020/repository-tools-private:#{TAG}
+          #image: consoleadm2020/repository-tools-private:#{TAG}
+          image: fpsregistry.azurecr.io/project-backend:#{TAG}
           env:
             - name: PROFILE
               value: #{PROFILE}

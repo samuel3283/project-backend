@@ -58,11 +58,10 @@ sh "${mvnHome}/bin/mvn clean package"
 stage('Construyendo Imagen ') {
 
 script {
-      env.REGISTRY_NAME = ${GIT_REPOSITORY}  
-      docker.build("${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}")
-      sh "docker tag ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT} ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}"
+      docker.build("${GIT_REPOSITORY}:${GIT_COMMIT_SHORT}")
+      sh "docker tag ${GIT_REPOSITORY}:${GIT_COMMIT_SHORT} ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}"
       withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            
-          sh "docker push ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}"
+          sh "docker push ${GIT_REPOSITORY}:${GIT_COMMIT_SHORT}"
       }
       
 }

@@ -75,9 +75,9 @@ script {
 
 
 
-            GIT_COMMIT_SHORT = '4b546fcd'    
+            #GIT_COMMIT_SHORT = '4b546fcd'    
             sh "chmod -R 777 $WORKSPACE "
-            sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
             sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
             sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
       

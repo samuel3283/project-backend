@@ -59,7 +59,7 @@ stage('Construyendo Imagen ') {
 
 script {
       docker.build("${GIT_REPOSITORY}:${GIT_COMMIT_SHORT}")
-      sh "docker tag ${GIT_REPOSITORY}:${GIT_COMMIT_SHORT} ${env.REGISTRY_NAME}:${GIT_COMMIT_SHORT}"
+      sh "docker tag ${GIT_REPOSITORY}:${GIT_COMMIT_SHORT} ${env.GIT_REPOSITORY}:${GIT_COMMIT_SHORT}"
       withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            
           sh "docker push ${GIT_REPOSITORY}:${GIT_COMMIT_SHORT}"
       }

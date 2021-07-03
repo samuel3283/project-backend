@@ -95,7 +95,7 @@ script {
             } 
 
             //def comando = "echo '${SERVICE_ACCOUNT_FILE}' > /home/services_account.json && gcloud auth activate-service-account --key-file=/home/services_account.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && echo '${DEPLOYMENT_FILE}' > /home/services.yaml && kubectl get nodes"
-            def comando = "echo '{SERVICE_ACCOUNT_FILE}' > /home/services_account.json && gcloud auth activate-service-account --key-file=/home/services_account.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && echo '${DEPLOYMENT_FILE}' > /home/services.yaml && kubectl get nodes"
+            def comando = "echo 'SERVICE_ACCOUNT_FILE' > /home/services_account.json && gcloud auth activate-service-account --key-file=/home/services_account.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && echo '${DEPLOYMENT_FILE}' > /home/services.yaml && kubectl get nodes"
             sh "docker run --network=host  ${env.REGISTRY_NAME}:gcpcli-kubectl-1.0 sh -c \"${comando}\""
 
         }

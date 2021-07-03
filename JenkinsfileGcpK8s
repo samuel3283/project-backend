@@ -16,7 +16,7 @@ def SERVICE_ACCOUNT_FILE = ""
 node {
 deleteDir()
 stage('Descargar Fuentes') {
-//checkout scm
+checkout scm
 
 script {
     GIT_COMMIT = sh (

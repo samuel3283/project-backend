@@ -80,10 +80,12 @@ script {
             echo "DEPLOYMENT_FILE:::::: ${DEPLOYMENT_FILE}"
 
             sh "ls -l"
-            withCredentials([file(credentialsId: 'service-account-gcp', variable: 'config-gcp')]) {
+            withCredentials([file(credentialsId: 'service-account-gcp', variable: 'config_gcp')]) {
             
             //sh "cp \$config-gcp $WORKSPACE/serviceaccount.json"
-            sh "use $config-gcp"
+            /sh "use $config-gcp"
+             writeFile file: '$WORKSPACE/serviceaccount.json', text: readFile(config_gcp)
+
             sh "ls -l"
 
             //sh "echo $my-service-account-gcp"

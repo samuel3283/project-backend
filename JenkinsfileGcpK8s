@@ -1,0 +1,92 @@
+#!groovy?
+def GIT_COMMIT = ""
+def GIT_COMMIT_SHORT = ""
+def GIT_BRANCH = ""
+def GIT_URL = ""
+def GIT_REPOSITORY = ""
+def GIT_USER = ""
+def GIT_EMAIL = ""
+def MY_SECRET_AWS_ACCESS_KEY = ""
+def MY_SECRET_AWS_SECRET_KEY = ""
+def PROFILE = ""
+def NAMESPACE = ""
+
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+
+script {
+    GIT_COMMIT = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    GIT_COMMIT_SHORT = GIT_COMMIT.substring(0,8)
+
+    GIT_BRANCH = sh (
+        script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
+        returnStdout: true
+    ).trim()
+
+    GIT_URL = sh (
+        script: 'git config --get remote.origin.url',
+        returnStdout: true
+    ).trim()
+    GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+
+    GIT_USER = sh (
+        script: "git show --format=\"%aN\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+    GIT_EMAIL = sh (
+        script: "git show --format=\"%aE\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+
+    echo "Git url: ${GIT_URL}"
+    echo "Git repository: ${GIT_REPOSITORY}"
+    echo "Git commit: ${GIT_COMMIT_SHORT}"
+    echo "Git branch: ${GIT_BRANCH}"
+    echo "Git user: ${GIT_USER}"
+    echo "Git email: ${GIT_EMAIL}"
+   
+    NAMESPACE = "kube-public"
+    PROFILE = "dev"
+    
+}
+
+}
+
+
+stage('Desplegando Imagen ') {
+
+script {
+      withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
+
+        withCredentials([usernamePassword(credentialsId: 'AWS_KEY', passwordVariable: 'SECRET', usernameVariable: 'ACCESS')]) {
+            
+            GIT_COMMIT_SHORT = '4b546fcd'    
+            sh "chmod -R 777 $WORKSPACE "
+            sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
+      
+            GIT_EMAIL = sh (
+                script: "cat  $WORKSPACE/services.yaml",
+                returnStdout: true
+            ).trim()
+
+            def comando = "aws configure set aws_access_key_id $ACCESS && aws configure set aws_secret_access_key $SECRET && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && echo '${GIT_EMAIL}' > /home/services.yaml && kubectl apply -f /home/services.yaml"
+            sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c \"${comando}\""
+
+        }
+          
+      }
+      
+}
+                    
+}
+
+
+
+}

@@ -81,7 +81,7 @@ script {
 
             withCredentials([file(credentialsId: 'service-account-gcp', variable: 'my-service-account-gcp')]) {
             
-            sh "use $my-service-account-gcp"
+            sh "echo $my-service-account-gcp"
 
             sh "cat $my-service-account-gcp"
 

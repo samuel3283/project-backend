@@ -79,17 +79,12 @@ script {
             ).trim()
             echo "DEPLOYMENT_FILE:::::: ${DEPLOYMENT_FILE}"
 
-            sh "ls -l"
             withCredentials([file(credentialsId: 'service-account-gcp', variable: 'config_gcp')]) {
             
-            //sh "cp \$config-gcp $WORKSPACE/serviceaccount.json"
-            //sh "use $config-gcp"
-             writeFile file: 'serviceaccount.json', text: readFile(config_gcp)
+            writeFile file: 'serviceaccount.json', text: readFile(config_gcp)
 
-            sh "ls -l"
-
-            //sh "echo $my-service-account-gcp"
-            //sh "cat $my-service-account-gcp"
+            //sh "ls -l"
+            //sh "chmod +x $WORKSPACE/serviceaccount.json"
 
             SERVICE_ACCOUNT_FILE = sh (
                 script: "cat $WORKSPACE/serviceaccount.json",
@@ -99,8 +94,8 @@ script {
             echo "SERVICE_ACCOUNT_FILE:::::: ${SERVICE_ACCOUNT_FILE}"
             } 
 
-            //def comando = "aws configure set aws_access_key_id $ACCESS && aws configure set aws_secret_access_key $SECRET && aws configure set default.region ${env.AWS_REGION} && aws eks --region ${env.AWS_REGION} update-kubeconfig --name ${env.AWS_K8S_EKS} && echo '${GIT_EMAIL}' > /home/services.yaml && kubectl apply -f /home/services.yaml"
-           //sh "docker run --network=host  ${env.REGISTRY_NAME}:awscli-kubectl_1.0 sh -c \"${comando}\""
+            def comando = "echo '${SERVICE_ACCOUNT_FILE}' > /home/services_account.json && gcloud auth activate-service-account --key-file=/home/services_account.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && echo '${FILE_DEPLOYMENT}' > /home/services.yaml && kubectl get nodes"
+            sh "docker run --network=host  ${env.REGISTRY_NAME}:1.0 sh -c \"${comando}\""
 
         }
           

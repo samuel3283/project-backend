@@ -79,10 +79,12 @@ script {
             ).trim()
             echo "DEPLOYMENT_FILE:::::: ${DEPLOYMENT_FILE}"
 
+            sh "ls -l"
             withCredentials([file(credentialsId: 'service-account-gcp', variable: 'config-gcp')]) {
             
-            sh "cp \$config-gcp $WORKSPACE/serviceaccount.json"
-            sh "echo \$config-gcp"
+            //sh "cp \$config-gcp $WORKSPACE/serviceaccount.json"
+            sh "use $config-gcp"
+            sh "ls -l"
 
             //sh "echo $my-service-account-gcp"
             //sh "cat $my-service-account-gcp"

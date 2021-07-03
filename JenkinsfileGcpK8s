@@ -84,7 +84,7 @@ script {
             
             //sh "cp \$config-gcp $WORKSPACE/serviceaccount.json"
             //sh "use $config-gcp"
-             writeFile file: '$WORKSPACE/serviceaccount.json', text: readFile(config_gcp)
+             writeFile file: 'serviceaccount.json', text: readFile(config_gcp)
 
             sh "ls -l"
 

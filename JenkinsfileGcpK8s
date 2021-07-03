@@ -81,12 +81,13 @@ script {
 
             withCredentials([file(credentialsId: 'service-account-gcp', variable: 'my-service-account-gcp')]) {
             
-            sh "echo $my-service-account-gcp"
+            sh "cp $my-service-account-gcp $WORKSPACE/serviceaccount.json"
 
-            sh "cat $my-service-account-gcp"
+            //sh "echo $my-service-account-gcp"
+            //sh "cat $my-service-account-gcp"
 
             SERVICE_ACCOUNT_FILE = sh (
-                script: "cat  $my-service-account-gcp",
+                script: "cat $WORKSPACE/serviceaccount.json",
                 returnStdout: true
             ).trim()
             

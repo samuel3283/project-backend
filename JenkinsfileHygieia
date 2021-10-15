@@ -1,0 +1,17 @@
+#!groovy?
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+}
+stage('Compilando con maven')
+{	
+def mvnHome = tool 'jenkinsmvn';
+sh "${mvnHome}/bin/mvn clean package"
+}
+stage('Construyendo Docker ') {
+hygieiaDeployPublishStep applicationName: 'AP01', artifactDirectory: '/target', artifactGroup: 'pe.com.backend', artifactName: '*.jar', artifactVersion: '', buildStatus: 'InProgress', environmentName: 'DEV'
+
+}
+
+}

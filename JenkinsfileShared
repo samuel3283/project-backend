@@ -1,0 +1,20 @@
+@Library('jenkins_shared_library@master')
+import pe.com.sura.services.JenkinsCloudFormation
+def pipeline = new JenkinsCloudFormation(this)
+
+def project="AP01"
+def deploymentEnvironment="DEV"
+
+node {
+
+   stage('Preparation') {
+      checkout scm
+      pipeline.configure()
+      env.project="${project}"
+   }
+   stage('Build') {
+      pipeline.deployIaC()
+   }
+
+}
+

@@ -2,8 +2,14 @@
 import pe.com.sura.services.JenkinsCloudFormation
 def pipeline = new JenkinsCloudFormation(this)
 
-def project="AP01"
-def deploymentEnvironment="DEV"
+
+//DEFINE PARAMETER S3
+def project="APP001"
+def environment="DEV"
+
+//DEFINE TAGS
+def project="APP001"
+def environment="DEV"
 
 node {
 

@@ -1,0 +1,15 @@
+{
+"s3": {
+  "name": "sura-dev-s3-configuration-rep"
+ },
+"lambda": {
+  "name": "sura-dev-lmdb-configuration-rep"
+ },
+"sns": {
+  "name": "sura-dev-lmdb-configuration-rep"
+ },
+"tag": {
+  "project": "APP002",
+  "environment": "DEV" 
+ }
+}

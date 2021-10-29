@@ -1,44 +1,38 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Description: "Template for creating S3 bucket"
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template S3 Bucket
 Parameters:
+  ResourceName:
+    Type: String
+    Description: The name of the S3 Bucket to create
   Versioning:
     Type: "String"
     Default: "Suspended"
     Description: "Versioning [Enabled,Suspended]"
-  Environment:
+  ParamTagEnv:
     Type: "String"
-    Default: "DEV"
-    Description: "Tag of Environment"
-  Project:
+    Default: ""
+    Description: "Tag of Environment [DEV,UAT,PRD]"
+  ParamTagProject:
     Type: "String"
-    Default: "PROYECTO-01"
+    Default: ""
     Description: "Tag name of Project"
-  Cost-center:
-    Type: "String"
-    Default: "PRY01"
-    Description: "Tag cost center"
 Resources:
-  Bucket:
-    Type: "AWS::S3::Bucket"
+  S3Bucket:
+    Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub ${BucketNameParam}"
+      BucketName: !Sub "${ResourceName}"
       AccessControl: Private
       VersioningConfiguration: 
         Status: !Ref Versioning
-      PublicAccessBlockConfiguration: 
+      PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
       Tags:
-        - Key: "Proyecto"
-          Value: !Sub "${ProyectoParam}"
-        - Key: "Ambiente"
-          Value: !Sub "${AmbienteParam}"
-Outputs:
-  BucketName:
-    Value: !Ref Bucket
-  BucketArn:
-    Value: !GetAtt Bucket.Arn
-  BucketDomainName:
-    Value: !GetAtt Bucket.DomainName
+        - Key: PROYECTO
+          Value: !Sub "${ParamTagProject}"
+        - Key: AMBIENTE
+          Value: !Sub "${ParamTagEnv}"
+      VersioningConfiguration:
+        Status: Enabled

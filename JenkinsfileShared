@@ -12,8 +12,8 @@ node {
       pipeline.configure()
       env.project="${project}"
    }
-   stage('Build') {
-      pipeline.deployIaC()
+   stage('Deploy') {
+      pipeline.deployS3IaC("S3",paremeter)
    }
 
 }

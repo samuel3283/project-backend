@@ -17,7 +17,7 @@ Parameters:
     Default: ""
     Description: "Tag name of Project"
 Resources:
-  S3Bucket:
+  Bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "${ResourceName}"
@@ -36,3 +36,10 @@ Resources:
           Value: !Sub "${ParamTagEnv}"
       VersioningConfiguration:
         Status: Enabled
+Outputs:
+  BucketName:
+    Value: !Ref Bucket
+  BucketArn:
+    Value: !GetAtt Bucket.Arn
+  BucketName:
+    Value: !GetAtt Bucket.DomainName

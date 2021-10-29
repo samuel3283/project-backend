@@ -4,8 +4,8 @@ def pipeline = new JenkinsCloudFormation(this)
 
 
 //DEFINE PARAMETER S3
-def project="APP001"
-def environment="DEV"
+def var_project="APP001"
+def var_environment="DEV"
 
 //DEFINE TAGS
 def project="APP001"

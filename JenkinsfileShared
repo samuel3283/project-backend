@@ -13,7 +13,7 @@ node {
       env.project="${project}"
    }
    stage('Deploy') {
-      pipeline.deployS3IaC()
+      pipeline.deployIaC("s3")
    }
 
 }

@@ -1,7 +1,8 @@
 @Library('jenkins_shared_library@master')
-def pipeline = new pe.com.sura.services.JenkinsCloudFormation(this)
+import pe.com.sura.services.JenkinsCloudFormation
+def pipeline = new JenkinsCloudFormation(this)
 
-def project="APLICATION001"
+def project="APLICATION004"
 def environment="DEV"
 
 node {

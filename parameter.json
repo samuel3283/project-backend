@@ -10,7 +10,7 @@
  },
 "tag": {
   "project": "APP002",
-  "environment": "DEV" 
+  "environment": "DEV",
   "cost_center": "CC0092" 
  }
 }

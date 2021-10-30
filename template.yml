@@ -16,6 +16,10 @@ Parameters:
     Type: "String"
     Default: ""
     Description: "Tag name of Project"
+  ParamTagCostCenter:
+    Type: "String"
+    Default: ""
+    Description: "Tag cost center"
 Resources:
   Bucket:
     Type: AWS::S3::Bucket

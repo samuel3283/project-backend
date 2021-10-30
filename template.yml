@@ -34,6 +34,8 @@ Resources:
           Value: !Sub "${ParamTagProject}"
         - Key: AMBIENTE
           Value: !Sub "${ParamTagEnv}"
+        - Key: CENTRO-COSTO
+          Value: !Sub "${ParamTagCostCenter}"
       VersioningConfiguration:
         Status: Enabled
 Outputs:

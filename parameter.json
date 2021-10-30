@@ -11,5 +11,6 @@
 "tag": {
   "project": "APP002",
   "environment": "DEV" 
+  "cost_center": "CC0092" 
  }
 }

@@ -1,6 +1,11 @@
 {
 "s3": {
-  "name": "sura-dev-s3-configuration-rep"
+  "name": "sura-dev-s3-configuration-rep",
+  "versioningConfiguration": "Suspended",
+  "blockPublicAcls": true,
+  "blockPublicPolicy": true,
+  "ignorePublicAcls": true,
+  "restrictPublicBuckets": true
  },
 "lambda": {
   "name": "sura-dev-lmdb-configuration-rep"

@@ -4,6 +4,22 @@ Parameters:
   ResourceName:
     Type: String
     Description: The name of the S3 Bucket to create
+  BlockPublicAcls:
+    Type: Boolean
+    Default: true
+    Description: Block public access control lists (ACLs)
+  BlockPublicPolicy:
+    Type: Boolean
+    Default: true
+    Description: Block public bucket policies for this bucket
+  IgnorePublicAcls:
+    Type: Boolean
+    Default: true
+    Description: Ignore public ACLs for this bucket
+  RestrictPublicBuckets:
+    Type: Boolean
+    Default: true
+    Description: Restrict public bucket policies for this bucket
   Versioning:
     Type: "String"
     Default: "Suspended"
@@ -27,12 +43,12 @@ Resources:
       BucketName: !Sub "${ResourceName}"
       AccessControl: Private
       VersioningConfiguration: 
-        Status: !Ref Versioning
+        Status: !Sub "${Versioning}"
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
+        BlockPublicAcls: !Sub "${BlockPublicAcls}"
+        BlockPublicPolicy: !Sub "${BlockPublicPolicy}"
+        IgnorePublicAcls: !Sub "${IgnorePublicAcls}"
+        RestrictPublicBuckets: !Sub "${RestrictPublicBuckets}"
       Tags:
         - Key: PROYECTO
           Value: !Sub "${ParamTagProject}"

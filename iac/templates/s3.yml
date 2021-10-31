@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template S3 Bucket
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref ResourceName
+      AccessControl: Private
+      VersioningConfiguration: 
+        Status: !Ref Versioning
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: !Ref BlockPublicAcls
+        BlockPublicPolicy: !Ref BlockPublicPolicy
+        IgnorePublicAcls: !Ref IgnorePublicAcls
+        RestrictPublicBuckets: !Ref RestrictPublicBuckets
+      Tags:
+        - Key: PROYECTO
+          Value: !Ref ParamTagProject
+        - Key: AMBIENTE
+          Value: !Ref ParamTagEnv
+        - Key: CENTRO-COSTO
+          Value: !Ref ParamTagCostCenter
+      VersioningConfiguration:
+        Status: Enabled
+Outputs:
+  BucketName:
+    Value: !Ref Bucket
+  BucketArn:
+    Value: !GetAtt Bucket.Arn
+  BucketName:
+    Value: !GetAtt Bucket.DomainName

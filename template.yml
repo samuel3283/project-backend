@@ -5,19 +5,19 @@ Parameters:
     Type: String
     Description: The name of the S3 Bucket to create
   BlockPublicAcls:
-    Type: Boolean
+    Type: String
     Default: true
     Description: Block public access control lists (ACLs)
   BlockPublicPolicy:
-    Type: Boolean
+    Type: String
     Default: true
     Description: Block public bucket policies for this bucket
   IgnorePublicAcls:
-    Type: Boolean
+    Type: String
     Default: true
     Description: Ignore public ACLs for this bucket
   RestrictPublicBuckets:
-    Type: Boolean
+    Type: String
     Default: true
     Description: Restrict public bucket policies for this bucket
   Versioning:

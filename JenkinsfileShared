@@ -15,6 +15,10 @@ node {
    stage('Deploy') {
       pipeline.deployIaC("s3")
    }
+   
+   stage('Results') {
+      pipeline.showResults()
+   }
 
 }
 

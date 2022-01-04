@@ -7,20 +7,11 @@ checkout scm
 stage('Compilando con maven')
 {	
 def mvnHome = tool 'jenkinsmvn';
-sh "${mvnHome}/bin/mvn clean package"
+sh "${mvnHome}/bin/mvn clean install"
 }
-stage('Construyendo Docker ') {
+stage('Desplegando') {
 script{
-//bat "docker stop container-repobackend"
-//bat "docker rm -f container-repobackend"
-//bat "docker image rm -f repobackend"
-//bat "docker rmi repobackend"
-sh "docker build -t projectbackend ."
-}
-}
-stage('Iniciando Docker ') {
-script{
-sh "docker run -d --name container-projectbackend -p 8085:8080 projectbackend:latest"
+sh "java -jar target/micrsoervice-backend-0.0.1-SNAPSHOT.jar --server.port=8085"
 }
 }
 }

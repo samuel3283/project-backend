@@ -1,0 +1,103 @@
+#!groovy?
+def GIT_COMMIT = ""
+def GIT_COMMIT_SHORT = ""
+def GIT_BRANCH = ""
+def GIT_URL = ""
+def GIT_REPOSITORY = ""
+def GIT_USER = ""
+def GIT_EMAIL = ""
+def MY_SECRET_AWS_ACCESS_KEY = ""
+def MY_SECRET_AWS_SECRET_KEY = ""
+def PROFILE = ""
+def NAMESPACE = ""
+def DEPLOYMENT_FILE = ""
+def SERVICE_ACCOUNT_FILE = ""
+
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+
+script {
+    GIT_COMMIT = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    GIT_COMMIT_SHORT = GIT_COMMIT.substring(0,8)
+
+    GIT_BRANCH = sh (
+        script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
+        returnStdout: true
+    ).trim()
+
+    GIT_URL = sh (
+        script: 'git config --get remote.origin.url',
+        returnStdout: true
+    ).trim()
+    GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+
+    GIT_USER = sh (
+        script: "git show --format=\"%aN\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+    GIT_EMAIL = sh (
+        script: "git show --format=\"%aE\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+
+    echo "Git url: ${GIT_URL}"
+    echo "Git repository: ${GIT_REPOSITORY}"
+    echo "Git commit: ${GIT_COMMIT_SHORT}"
+    echo "Git branch: ${GIT_BRANCH}"
+    echo "Git user: ${GIT_USER}"
+    echo "Git email: ${GIT_EMAIL}"
+   
+    NAMESPACE = "kube-public"
+    PROFILE = "dev"
+    
+}
+
+}
+
+
+stage('Desplegando Imagen ') {
+
+script {
+      withDockerRegistry([ credentialsId: "credentialDockerRegistry", url: "https://${env.REGISTRY_URL}" ]){            
+
+        withCredentials([usernamePassword(credentialsId: 'AWS_KEY', passwordVariable: 'SECRET', usernameVariable: 'ACCESS')]) {
+            
+            GIT_COMMIT_SHORT = '4b546fcd'    
+            sh "chmod -R 777 $WORKSPACE "
+            sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
+            
+            /*
+            DEPLOYMENT_FILE = sh (
+                script: "cat  $WORKSPACE/services.yaml",
+                returnStdout: true
+            ).trim()
+            */
+            
+            withCredentials([file(credentialsId: 'service-account-gcp', variable: 'config_gcp')]) {
+            
+            writeFile file: 'serviceaccount.json', text: readFile(config_gcp) 
+            } 
+
+            //def comando = "gcloud auth activate-service-account --key-file=/home/workspace/serviceaccount.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && kubectl apply -f /home/workspace/services.yaml"
+            def comando = "gcloud auth activate-service-account --key-file=/home/workspace/serviceaccount.json && gcloud container clusters get-credentials fp-dev-ti-k8s --region us-east1 --project fp-dev-ti-project && kubectl get nodes"
+
+            sh "docker run --network=host --rm  -v $WORKSPACE:/home/workspace ${env.REGISTRY_NAME}:gcpcli-kubectl-1.0  sh -c \"${comando}\""
+
+        }
+          
+      }
+      
+}
+                    
+}
+
+
+
+}

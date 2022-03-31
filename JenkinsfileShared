@@ -1,0 +1,25 @@
+@Library('jenkins_shared_library@master')
+import pe.com.sura.services.JenkinsCloudFormation
+def pipeline = new JenkinsCloudFormation(this)
+
+def project="APLICATION004"
+def environment="DEV"
+
+node {
+
+   stage('Preparation') {
+      checkout scm
+      pipeline.configure()
+      env.project="${project}"
+   }
+   stage('Deploy') {
+      pipeline.deployIaC("s3","parameter-s3-config.json")
+      pipeline.deployIaC("s3","parameter-s3-shared.json")
+   }
+   
+   stage('Results') {
+      pipeline.showResults()
+   }
+
+}
+

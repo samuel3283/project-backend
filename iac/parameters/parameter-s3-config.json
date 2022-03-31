@@ -1,0 +1,39 @@
+[
+        {
+            "ParameterKey": "ResourceName",
+            "ParameterValue": "sura-config-appl0093"
+        },
+        {
+            "ParameterKey": "Versioning",
+            "ParameterValue": "Suspended"
+        },
+        {
+            "ParameterKey": "BlockPublicAcls",
+            "ParameterValue": "true"
+        },
+        {
+            "ParameterKey": "BlockPublicPolicy",
+            "ParameterValue": "true"
+        },
+        {
+            "ParameterKey": "IgnorePublicAcls",
+            "ParameterValue": "true"
+        },
+        {
+            "ParameterKey": "RestrictPublicBuckets",
+            "ParameterValue": "true"
+        },
+        {
+            "ParameterKey": "ParamTagProject",
+            "ParameterValue": "APPL0093"
+        },
+        {
+            "ParameterKey": "ParamTagEnv",
+            "ParameterValue": "ENV"
+        },
+        {
+            "ParameterKey": "ParamTagCostCenter",
+            "ParameterValue": "PRY9323"
+        }
+
+]

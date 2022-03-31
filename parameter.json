@@ -1,0 +1,21 @@
+{
+"s3": {
+  "name": "sura-dev-s3-configuration-rep",
+  "versioningConfiguration": "Suspended",
+  "blockPublicAcls": true,
+  "blockPublicPolicy": true,
+  "ignorePublicAcls": true,
+  "restrictPublicBuckets": true
+ },
+"lambda": {
+  "name": "sura-dev-lmdb-configuration-rep"
+ },
+"sns": {
+  "name": "sura-dev-lmdb-configuration-rep"
+ },
+"tag": {
+  "project": "APP002",
+  "environment": "DEV",
+  "cost_center": "CC0092" 
+ }
+}

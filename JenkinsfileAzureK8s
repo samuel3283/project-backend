@@ -1,0 +1,101 @@
+#!groovy?
+def GIT_COMMIT = ""
+def GIT_COMMIT_SHORT = ""
+def GIT_BRANCH = ""
+def GIT_URL = ""
+def GIT_REPOSITORY = ""
+def GIT_USER = ""
+def GIT_EMAIL = ""
+def MY_SECRET_AWS_ACCESS_KEY = ""
+def MY_SECRET_AWS_SECRET_KEY = ""
+def PROFILE = ""
+def NAMESPACE = ""
+
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+
+script {
+    GIT_COMMIT = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    GIT_COMMIT_SHORT = GIT_COMMIT.substring(0,8)
+
+    GIT_BRANCH = sh (
+        script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
+        returnStdout: true
+    ).trim()
+
+    GIT_URL = sh (
+        script: 'git config --get remote.origin.url',
+        returnStdout: true
+    ).trim()
+    GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+
+    GIT_USER = sh (
+        script: "git show --format=\"%aN\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+    GIT_EMAIL = sh (
+        script: "git show --format=\"%aE\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+
+    echo "Git url: ${GIT_URL}"
+    echo "Git repository: ${GIT_REPOSITORY}"
+    echo "Git commit: ${GIT_COMMIT_SHORT}"
+    echo "Git branch: ${GIT_BRANCH}"
+    echo "Git user: ${GIT_USER}"
+    echo "Git email: ${GIT_EMAIL}"
+   
+    NAMESPACE = "kube-public"
+    PROFILE = "dev"
+    
+}
+
+}
+
+
+stage('Desplegando Imagen ') {
+
+script {
+      withDockerRegistry([ credentialsId: "credentialAzureDockerRegistry", url: "https://${env.AZURE_REGISTRY_URL}" ]){            
+      
+        withCredentials([
+            [$class: "StringBinding", credentialsId: "azureAksUser", variable: "AZ_AKS_USER" ],
+            [$class: "StringBinding", credentialsId: "azureAksPassword", variable: "AZ_AKS_PASSWORD" ],
+            [$class: "StringBinding", credentialsId: "azureAksTenantId", variable: "AZ_AKS_TENANT_ID" ],
+            [$class: "StringBinding", credentialsId: "azureAksSuscription", variable: "AZ_AKS_SUSCRIPTION" ],
+            [$class: "StringBinding", credentialsId: "azureAksResourcesGroup", variable: "AZ_AKS_RESOURCE_GROUP" ],
+            [$class: "StringBinding", credentialsId: "azureAksK8sName", variable: "AZ_AKS_K8S_NAME" ]
+          ]){
+
+
+
+            sh "chmod -R 777 $WORKSPACE "
+            sh "sed -i 's/#{TAG}/${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
+            sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
+      
+            FILE_DEPLOYMENT = sh (
+                script: "cat  $WORKSPACE/services.yaml",
+                returnStdout: true
+            ).trim()
+            
+            ECR_REGISTRY_NAME = "azurecli-kubectl"
+            def comando = "az login --output table --username $AZ_AKS_USER --password $AZ_AKS_PASSWORD --tenant $AZ_AKS_TENANT_ID && az account set --subscription ${AZ_AKS_SUSCRIPTION} && az aks get-credentials --resource-group ${AZ_AKS_RESOURCE_GROUP} --name ${AZ_AKS_K8S_NAME} && echo '${FILE_DEPLOYMENT}' > /home/services.yaml && kubectl apply -f /home/services.yaml"
+            sh "docker run --network=host  ${env.REGISTRY_NAME}:azurecli-kubectl-1.0 sh -c \"${comando}\""
+
+        }
+          
+      }
+      
+}
+                    
+}
+
+
+
+}

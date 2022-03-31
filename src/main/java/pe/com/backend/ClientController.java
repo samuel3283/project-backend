@@ -53,13 +53,12 @@ public class ClientController {
 	
 	
 	@RequestMapping(value ="/services/rest/listadoProducto", 
-			method = RequestMethod.POST, produces = { "application/json" })
+			method = RequestMethod.GET, produces = { "application/json" })
 	@ResponseBody
 	public List<Product> listProduct(@RequestBody Autenticacion request) {
 		
 		List<Product> response = new ArrayList<Product>();
-		
-		
+			
 		
 		Product prod1 = new Product();
 		prod1.setNombre("arroz");

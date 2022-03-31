@@ -1,0 +1,77 @@
+#!groovy?
+def GIT_COMMIT = ""
+def GIT_COMMIT_SHORT = ""
+def GIT_BRANCH = ""
+def GIT_URL = ""
+def GIT_REPOSITORY = ""
+def GIT_USER = ""
+def GIT_EMAIL = ""
+def PROFILE = "dev"
+def NAMESPACE = "kube-public"
+
+node {
+deleteDir()
+stage('Descargar Fuentes') {
+checkout scm
+
+script {
+    GIT_COMMIT = sh (
+        script: 'git rev-parse HEAD',
+        returnStdout: true
+    ).trim()
+    GIT_COMMIT_SHORT = GIT_COMMIT.substring(0,8)
+
+    GIT_BRANCH = sh (
+        script: 'git name-rev --name-only HEAD | sed "s?.*remotes/origin/??"',
+        returnStdout: true
+    ).trim()
+
+    GIT_URL = sh (
+        script: 'git config --get remote.origin.url',
+        returnStdout: true
+    ).trim()
+    GIT_REPOSITORY = GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+
+    GIT_USER = sh (
+        script: "git show --format=\"%aN\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+    GIT_EMAIL = sh (
+        script: "git show --format=\"%aE\" ${GIT_COMMIT} | head -n 1",
+        returnStdout: true
+    ).trim()
+
+    echo "Git url: ${GIT_URL}"
+    echo "Git repository: ${GIT_REPOSITORY}"
+    echo "Git commit: ${GIT_COMMIT_SHORT}"
+    echo "Git branch: ${GIT_BRANCH}"
+    echo "Git user: ${GIT_USER}"
+    echo "Git email: ${GIT_EMAIL}"
+
+}
+
+}
+
+stage('Prepare Despliegue') {
+
+script {
+      sh "chmod -R 777 $WORKSPACE "
+      sh "sed -i 's/#{TAG}/${GIT_REPOSITORY}_${GIT_COMMIT_SHORT}/g' $WORKSPACE/services.yaml"
+      sh "sed -i 's/#{PROFILE}/${PROFILE}/g' $WORKSPACE/services.yaml"
+      sh "sed -i 's/#{NAMESPACE}/${NAMESPACE}/g' $WORKSPACE/services.yaml"    
+}
+                  
+}
+
+ stage('Despliegue') {
+
+  kubernetesDeploy(
+    configs: 'services.yaml',
+    kubeconfigId: 'credential-kubeconfig-aws',
+    enableConfigSubstitution: true
+   )           
+                    
+  }
+  
+
+}
